@@ -2,7 +2,19 @@ const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const { WebSocketServer } = require('ws');
-const WebSocket = require('ws')
+const WebSocket = require('ws');
+const goggle_pb = require('google-protobuf');
+const fs = require("fs")
+const Schema = require('./alarm_area_pb_server');
+const Pbf = require('pbf');
+
+var message = "message";
+
+var buf = new Uint8Array(message.data).buffer;
+var pbf = new Pbf(buf);
+
+var obj = Schema.alarm_area.read(pbf);
+console.log(obj);
 
 //const __dirname = './';
 //app.set('view engine', 'ejs'); // 렌더링 엔진 모드를 ejs로 설정
@@ -26,7 +38,9 @@ wss.on('connection', function(ws, request){
     ws.onmessage = function(e){
         //console.log(e.data);
         let clientName = e.data;
+
         console.log(clientName);
+
         //연결한 client name 부여
         ws.name = clientName; 
     }
